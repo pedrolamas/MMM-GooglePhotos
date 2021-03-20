@@ -110,12 +110,17 @@ Module.register("MMM-GooglePhotos", {
       this.sendSocketNotification("IMAGE_LOAD_FAIL", url)
     }
     hidden.onload = () => {
+      var back_old = document.getElementById("GPHOTO_BACK_OLD")
+      var current_old = document.getElementById("GPHOTO_CURRENT_OLD")
       var back = document.getElementById("GPHOTO_BACK")
       var current = document.getElementById("GPHOTO_CURRENT")
       //current.classList.remove("animated")
       var dom = document.getElementById("GPHOTO")
+      back_old.style.backgroundImage = back.style.backgroundImage;
+      current_old.style.backgroundImage = current.style.backgroundImage;
       back.style.backgroundImage = `url(${url})`
       current.style.backgroundImage = `url(${url})`
+      back.classList.add("animated")
       current.classList.add("animated")
       var info = document.getElementById("GPHOTO_INFO")
       var album = this.albums.find((a)=>{
@@ -172,6 +177,10 @@ Module.register("MMM-GooglePhotos", {
   getDom: function() {
     var wrapper = document.createElement("div")
     wrapper.id = "GPHOTO"
+    var back_old = document.createElement("div")
+    back_old.id = "GPHOTO_BACK_OLD"
+    var current_old = document.createElement("div")
+    current_old.id = "GPHOTO_CURRENT_OLD"
     var back = document.createElement("div")
     back.id = "GPHOTO_BACK"
     var current = document.createElement("div")
@@ -180,12 +189,17 @@ Module.register("MMM-GooglePhotos", {
       if (this.config.showWidth) wrapper.style.width = this.config.showWidth + "px"
       if (this.config.showHeight) wrapper.style.height = this.config.showHeight + "px"
     }
+    back.addEventListener('animationend', ()=>{
+      back.classList.remove("animated")
+    })
     current.addEventListener('animationend', ()=>{
       current.classList.remove("animated")
     })
     var info = document.createElement("div")
     info.id = "GPHOTO_INFO"
     info.innerHTML = "Loading..."
+    wrapper.appendChild(back_old)
+    wrapper.appendChild(current_old)
     wrapper.appendChild(back)
     wrapper.appendChild(current)
     wrapper.appendChild(info)
